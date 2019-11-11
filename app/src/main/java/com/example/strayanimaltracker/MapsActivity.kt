@@ -3,6 +3,7 @@ package com.example.strayanimaltracker
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -17,12 +18,13 @@ class MapsActivity : AppCompatActivity(),
     GoogleMap.OnMyLocationButtonClickListener,
     GoogleMap.OnMyLocationClickListener {
 
+    private val LOGTAG = "LOGTAG"
+
     private lateinit var mMap: GoogleMap
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var lastCoordinates: LatLng
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +34,13 @@ class MapsActivity : AppCompatActivity(),
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                var lat = location!!.latitude
-                var lng = location.longitude
-                lastCoordinates = LatLng(lat, lng)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastCoordinates, 15F))
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Erro ao pegar a posição.", Toast.LENGTH_SHORT).show()
-            }
-
+        getLocation()
+        try {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastCoordinates, 15F))
+        }catch (e :Exception) {
+            Log.e(LOGTAG,"Erro ao utilizar coordenadas.")
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -59,23 +55,30 @@ class MapsActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        //mMap.setMyLocationEnabled(true) Java way
         mMap.isMyLocationEnabled = true
         mMap.setOnMyLocationButtonClickListener(this)
         mMap.setOnMyLocationClickListener(this)
     }
 
-
     override fun onMyLocationButtonClick(): Boolean {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show()
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false
     }
 
-    override fun onMyLocationClick(location: Location) {
-        Toast.makeText(this, "Current location: $location", Toast.LENGTH_LONG).show()
+    override fun onMyLocationClick(location: Location) {}
 
+    fun getLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                var lat = location!!.latitude
+                var lng = location.longitude
+                lastCoordinates = LatLng(lat, lng)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Erro ao pegar a posição.", Toast.LENGTH_SHORT).show()
+            }
     }
-
 }

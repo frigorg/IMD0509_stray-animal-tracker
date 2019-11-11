@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "311452314766",
+    "firebase_url": "https://stray-animal-tracker.firebaseio.com",
+    "project_id": "stray-animal-tracker",
+    "storage_bucket": "stray-animal-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311452314766:android:999851208ffab451dbaddf",
+        "android_client_info": {
+          "package_name": "com.example.strayanimaltracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311452314766-efq4rv73jih2nvpm76m0i13kvjffvfj4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_PF1MQUmRNnxyLrzG4u9jJxk8P8bhe60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311452314766-efq4rv73jih2nvpm76m0i13kvjffvfj4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
