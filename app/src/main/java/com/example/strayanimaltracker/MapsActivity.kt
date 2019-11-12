@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 
 class MapsActivity : AppCompatActivity(),
     OnMapReadyCallback,
@@ -73,12 +75,20 @@ class MapsActivity : AppCompatActivity(),
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location : Location? ->
-                var lat = location!!.latitude
-                var lng = location.longitude
+                val lat = location!!.latitude
+                val lng = location.longitude
                 lastCoordinates = LatLng(lat, lng)
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Erro ao pegar a posição.", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private lateinit var auth: FirebaseAuth
+
+    private fun logout() {
+        auth.signOut()
+        finish()
+    }
+
 }
