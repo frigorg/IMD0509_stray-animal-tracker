@@ -1,11 +1,18 @@
 package com.example.strayanimaltracker
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -89,6 +96,30 @@ class MapsActivity : AppCompatActivity(),
     private fun logout() {
         auth.signOut()
         finish()
+    }
+
+    val CAMERA_REQUEST_CODE = 0
+
+    fun abrirCamera() {
+        val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (callCameraIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(callCameraIntent, CAMERA_REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            CAMERA_REQUEST_CODE->{
+                if(resultCode == Activity.RESULT_OK && data != null){
+                    //photoCapture.setImageBitmap(data.extras?.get("data") as Bitmap) //photoCapture é um ImageView
+
+                }
+            }
+            else ->{
+                Toast.makeText(this,"Erro request code",Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
 }
