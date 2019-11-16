@@ -29,17 +29,30 @@ class LogInActivity : AppCompatActivity() {
         }
 
         cadastrar_login.setOnClickListener {
-            startActivityForResult(Intent(this, SignUpActivity::class.java), 10)
+            startActivity(Intent(this, SignUpActivity::class.java))
+        }
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            login()
         }
     }
 
     fun verificarLogin() {
 
+        //TODO Seria legal colocar algo indicando carregamento até que esse método dê erro ou o login conclua
+
         if(email_login.text!!.isEmpty()){
             email_login.error = "Campo não preenchido"
+            email_login.requestFocus()
             return
         }else if (senha_login.text!!.isEmpty()) {
             senha_login.error = "Campo não preenchido"
+            senha_login.requestFocus()
             return
         }
 
@@ -76,28 +89,10 @@ class LogInActivity : AppCompatActivity() {
         senha_login.setText(sp.getString("SENHA_PREFERENCE", ""))
     }
 
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            login()
-        }
-    }
-
     private fun login() {
         salvarLoginPreference(email_login.text.toString(), senha_login.text.toString())
         startActivity(Intent(this, MapsActivity::class.java))
         finish()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == 10){
-                recuperarLoginPreference()
-            }
-        }
     }
 
 }

@@ -23,6 +23,8 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
+        auth = FirebaseAuth.getInstance()
+
         cancelar_signup.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()
@@ -55,7 +57,7 @@ class SignUpActivity : AppCompatActivity() {
                     setResult(Activity.RESULT_OK)
                     finish()
                 } else {
-                    val resposta = task.exception!!.toString()
+                    val resposta = task.exception!!.message
                     Toast.makeText(
                         this@SignUpActivity,
                         resposta, Toast.LENGTH_LONG
@@ -65,22 +67,26 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun validarCampos(): Boolean {
-        if(!Patterns.EMAIL_ADDRESS.matcher(email_signup.text.toString()).matches()) {
-            email_signup.error = "E-mail inválido"
-            return false
-        }
 
         if(nome_signup.text!!.isEmpty()){
             nome_signup.error = "Campo nome obrigatório"
+            nome_signup.requestFocus()
             return false
         }else if (sobrenome_signup.text!!.isEmpty()) {
             sobrenome_signup.error = "Campo sobrenome obrigatório"
+            sobrenome_signup.requestFocus()
             return false
         }else if(email_signup.text!!.isEmpty()){
             email_signup.error = "Campo E-mail obrigatório"
+            email_signup.requestFocus()
+            return false
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(email_signup.text.toString()).matches()) {
+            email_signup.error = "E-mail inválido"
+            email_signup.requestFocus()
             return false
         }else if (senha_signup.text!!.isEmpty()) {
             senha_signup.error = "Campo Senha obrigatório"
+            senha_signup.requestFocus()
             return false
         }
 
