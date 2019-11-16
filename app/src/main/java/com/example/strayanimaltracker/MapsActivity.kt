@@ -6,13 +6,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -21,6 +24,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MapsActivity : AppCompatActivity(),
     OnMapReadyCallback,
@@ -42,6 +49,13 @@ class MapsActivity : AppCompatActivity(),
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
+
+        abrirCamera()
+
+
+
 
         getLocation()
         try {
@@ -98,12 +112,34 @@ class MapsActivity : AppCompatActivity(),
         finish()
     }
 
-    val CAMERA_REQUEST_CODE = 0
+
+
+
+
+    val CAMERA_REQUEST_CODE = 1
 
     fun abrirCamera() {
         val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (callCameraIntent.resolveActivity(packageManager) != null) {
-            startActivityForResult(callCameraIntent, CAMERA_REQUEST_CODE)
+
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (e: IOException) {
+                Log.e(LOGTAG, e.message!!)
+                null
+            }
+
+
+            photoFile?.also {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    this,
+                    "com.example.strayanimaltracker.fileprovider",
+                    it
+                )
+                callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(callCameraIntent, CAMERA_REQUEST_CODE)
+            }
+
         }
     }
 
@@ -112,8 +148,15 @@ class MapsActivity : AppCompatActivity(),
         when(requestCode){
             CAMERA_REQUEST_CODE->{
                 if(resultCode == Activity.RESULT_OK && data != null){
-                    //photoCapture.setImageBitmap(data.extras?.get("data") as Bitmap) //photoCapture é um ImageView
+                    val imageBitmap = data.extras!!.get("data") as Bitmap
 
+
+                    //Colocar na galeria
+                    Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
+                        val f = File(currentPhotoPath!!)
+                        mediaScanIntent.data = Uri.fromFile(f)
+                        sendBroadcast(mediaScanIntent)
+                    }
                 }
             }
             else ->{
@@ -121,5 +164,24 @@ class MapsActivity : AppCompatActivity(),
             }
         }
     }
+
+    private var currentPhotoPath: String? = ""
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
+
 
 }
