@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="25dp"
-    tools:context=".LogInActivity">
+    tools:context=".activity.LogInActivity">
 
     <ImageView
         android:layout_width="50dp"

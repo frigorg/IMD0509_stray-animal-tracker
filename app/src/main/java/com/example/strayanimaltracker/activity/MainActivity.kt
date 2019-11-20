@@ -1,11 +1,9 @@
-package com.example.strayanimaltracker
+package com.example.strayanimaltracker.activity
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import java.util.jar.Manifest
+import com.example.strayanimaltracker.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startActivity(Intent(this, LogInActivity::class.java))
+        startActivity(Intent(this, MapsActivity::class.java))
     }
 
 }

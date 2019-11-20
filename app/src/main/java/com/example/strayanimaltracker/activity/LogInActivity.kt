@@ -1,15 +1,14 @@
-package com.example.strayanimaltracker
+package com.example.strayanimaltracker.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.strayanimaltracker.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_log_in.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class LogInActivity : AppCompatActivity() {
 
