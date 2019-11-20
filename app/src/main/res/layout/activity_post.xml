@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".activity.PostActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Novo Bichinho"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:layout_marginBottom="30dp"/>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imagem_post"
+        android:layout_gravity="center"
+        android:maxWidth="150dp"
+        android:maxHeight="150dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:paddingStart="0dp"
+            android:paddingEnd="5dp"
+            android:hint="Nome">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nome_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textAutoComplete"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner_post"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/especie_radiogroup_post"
+        android:orientation="horizontal"
+        android:layout_margin="15dp"
+        android:layout_gravity="center">
+        <RadioButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/gato_radio_post"
+            android:button="@android:color/transparent"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/caticonpb"/>
+        <RadioButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/cachorro_radio_post"
+            android:button="@android:color/transparent"
+            android:background="@drawable/dogiconpb"/>
+
+    </RadioGroup>
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="right">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelar_post"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:text="Cancelar"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cadastrar_post"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cadastrar" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
