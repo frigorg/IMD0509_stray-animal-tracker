@@ -56,6 +56,9 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             finish()
         }
 
+        post.latitude = intent.getDoubleExtra("latitude", 0.0)
+        post.longitude = intent.getDoubleExtra("longitude", 0.0)
+
         //Configura os botões radio
         especie_radiogroup_post.setOnCheckedChangeListener{ group, checkedId ->
             if(cachorro_radio_post.isChecked) {
@@ -164,7 +167,9 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             "nome" to post.nome,
             "sexo" to post.sexo,
             "especie" to post.especie,
-            "data" to dataAtual()
+            "data" to dataAtual(),
+            "latitude" to post.latitude,
+            "longitude" to post.longitude
         )
 
         db.collection("post")

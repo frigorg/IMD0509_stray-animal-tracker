@@ -52,7 +52,6 @@ class MapsActivity : AppCompatActivity(),
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        abrirPostActivity()
     }
 
     // Executa quando o mapa estiver pronto
@@ -99,6 +98,7 @@ class MapsActivity : AppCompatActivity(),
     private fun focusCamera(position: LatLng) {
         try {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15F))
+            abrirPostActivity() // TODO TIRAR ISSO DAQUI DEPOIS QUE TESTAR A ACTIVITY
         }catch (e :Exception) {
             Log.e(LOGTAG,"Erro ao focalizar a câmera.")
             e.printStackTrace()
@@ -112,8 +112,14 @@ class MapsActivity : AppCompatActivity(),
     }
 
     private fun abrirPostActivity() {
-        val i = Intent(this, PostActivity::class.java)
-        startActivity(i)
+        if (lastCoordinates != null) {
+            val i = Intent(this, PostActivity::class.java)
+            i.putExtra("latitude", lastCoordinates.latitude)
+            i.putExtra("longitude", lastCoordinates.longitude)
+            startActivity(i)
+        }else {
+            Toast.makeText(this, "Erro ao usar as coordenadas.", Toast.LENGTH_LONG).show()
+        }
     }
 
 

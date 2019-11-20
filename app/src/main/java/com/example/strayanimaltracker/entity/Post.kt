@@ -1,6 +1,6 @@
 package com.example.strayanimaltracker.entity
 
-class Post() {
+class Post {
 
     var id: String = ""
     var idUsuario: String = ""
@@ -8,13 +8,7 @@ class Post() {
     var sexo: String = ""
     var especie: String = ""
     var data: String = ""
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
-        constructor(id: String, idUsuario: String, nome: String, sexo: String, especie: String, data: String):this() {
-            this.id = id
-            this.idUsuario = idUsuario
-            this.nome= nome
-            this.sexo= sexo
-            this.especie = especie
-            this.data = data
-        }
 }
