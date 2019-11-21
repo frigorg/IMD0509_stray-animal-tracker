@@ -2,12 +2,16 @@ package com.example.strayanimaltracker.activity
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
+import com.example.strayanimaltracker.NotificationUtils
 import com.example.strayanimaltracker.R
+import com.example.strayanimaltracker.TarefaReceiver
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -17,7 +21,7 @@ class SignUpActivity : AppCompatActivity() {
     private val MYTAG = "MYTAG"
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
-
+    private var receiver: TarefaReceiver? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -30,9 +34,14 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         cadastrar_signup.setOnClickListener {
-            if(validarCampos())
+            if(validarCampos()) {
                 cadastrarUser()
-        }
+
+
+            }
+
+            }
+
     }
 
     private fun cadastrarUser() {
@@ -44,10 +53,14 @@ class SignUpActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, senha)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+
+
                     Toast.makeText(
                         this@SignUpActivity,
                         "Usuário Cadastrado com Sucesso", Toast.LENGTH_LONG
                     ).show()
+
+
 
                     adicionarUser(auth.currentUser!!.uid, nome, sobrenome, email)
 
@@ -108,6 +121,20 @@ class SignUpActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w(MYTAG, "Erro ao adicionar o usuário", e)
             }
+        /*
+        receiver = TarefaReceiver(nome,email)
+        var intentFilter = IntentFilter()
+        intentFilter.addAction("br.ufrn.imd.android.broadcast.TOAST");
+        registerReceiver(receiver,intentFilter)
+
+
+
+        var i: Intent? = Intent("br.ufrn.imd.android.broadcast.TOAST")
+        i!!.putExtra("nome",nome)
+        i!!.putExtra("email",email)
+        sendBroadcast(i)
+*/
+
     }
 
 
