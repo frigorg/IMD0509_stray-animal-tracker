@@ -37,17 +37,17 @@ object NotificationUtils {
         }
         notificationManager.createNotificationChannel(channel)
     }
-
-    fun notificationSimple(context: Context, nome: String, email: String){
+/*
+    fun notificationSimple(context: Context, ){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(context)
         }
 
         var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-
-            .setTicker("Novo(a) Usuario(a) nome :$nome")
-            .setContentTitle("$nome  $email")
-            .setContentText(email)
+            .setSmallIcon(R.drawable.caticonpink2)
+            .setTicker("Novo Post Criado ID:${post.id}")
+            .setContentTitle("Nome animail:${post.nome} especie: ${post.especie}")
+            .setContentText("latitude:${post.latitude},longirude${post.longitude}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setColor(ActivityCompat.getColor(context,R.color.colorAccent))
             .setDefaults(Notification.DEFAULT_ALL)
@@ -55,7 +55,7 @@ object NotificationUtils {
         var notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(1,notificationBuilder.build())
 
-    }
+    }*/
     fun notificationSimpleBroadcast(context: Context, nome: String, email:String){
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -63,6 +63,7 @@ object NotificationUtils {
         }
 
         var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.caticonpink2)
             .setTicker("Novo usuario(a) nome:$nome")
             .setContentTitle("$nome  $email")
             .setContentText(" Usuario criado com sucesso")

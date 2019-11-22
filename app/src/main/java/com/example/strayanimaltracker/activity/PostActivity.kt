@@ -13,15 +13,14 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.strayanimaltracker.R
 import com.example.strayanimaltracker.entity.Post
-import com.example.strayanimaltracker.entity.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_post.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.strayanimaltracker.NotificationUtils as NotificationUtils
 
 class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 

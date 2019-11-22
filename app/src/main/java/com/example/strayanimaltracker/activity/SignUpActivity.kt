@@ -121,7 +121,6 @@ class SignUpActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w(MYTAG, "Erro ao adicionar o usuário", e)
             }
-        /*
         receiver = TarefaReceiver(nome,email)
         var intentFilter = IntentFilter()
         intentFilter.addAction("br.ufrn.imd.android.broadcast.TOAST");
@@ -133,7 +132,7 @@ class SignUpActivity : AppCompatActivity() {
         i!!.putExtra("nome",nome)
         i!!.putExtra("email",email)
         sendBroadcast(i)
-*/
+
 
     }
 
