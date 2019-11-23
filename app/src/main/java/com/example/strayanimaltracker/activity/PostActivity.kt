@@ -52,6 +52,7 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             idUsuario = auth.currentUser!!.uid
         } else {
             Toast.makeText(this, "Erro ao pegar id de usuário.", Toast.LENGTH_LONG).show()
+            setResult(Activity.RESULT_CANCELED)
             finish()
         }
 
@@ -59,7 +60,7 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         post.longitude = intent.getDoubleExtra("longitude", 0.0)
 
         //Configura os botões radio
-        especie_radiogroup_post.setOnCheckedChangeListener{ group, checkedId ->
+        especie_radiogroup_post.setOnCheckedChangeListener{ _, _ ->
             if(cachorro_radio_post.isChecked) {
                 post.especie = CACHORRO
                 cachorro_radio_post.background = getDrawable(R.drawable.dogiconpink)
@@ -136,6 +137,7 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
             else ->{
                 Toast.makeText(this,"Erro request code",Toast.LENGTH_LONG).show()
+                setResult(Activity.RESULT_CANCELED)
                 finish()
             }
         }
@@ -175,11 +177,14 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             .add(post)
             .addOnSuccessListener { documentReference ->
                 armazenarFoto(documentReference.id)
-                Log.d(LOGTAG, "Post adicionado com o ID: ${documentReference.id}.")
+                Log.i(LOGTAG, "Post adicionado com o ID: ${documentReference.id}.")
+                val i = Intent()
+                i.putExtra("idPost", documentReference.id)
+                setResult(Activity.RESULT_OK, i)
                 finish()
             }
             .addOnFailureListener { e ->
-                Log.w(LOGTAG, "Erro ao adicionar o post.", e)
+                Log.e(LOGTAG, "Erro ao adicionar o post.", e)
             }
     }
 

@@ -24,7 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.PostActivity"></activity>
+        <activity android:name=".activity.AnimalActivity"></activity>
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.LogInActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <!--
@@ -37,7 +39,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyDEFNTRzV1RO_bQhZ5dP3N3aq-_FYZFM-c" />
 
         <activity
             android:name=".activity.MapsActivity"

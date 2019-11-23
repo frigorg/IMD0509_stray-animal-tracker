@@ -115,7 +115,7 @@ class SignUpActivity : AppCompatActivity() {
         db.collection("user")
             .document(id)
             .set(user)
-            .addOnSuccessListener { documentReference ->
+            .addOnSuccessListener { _ ->
                 Log.d(MYTAG, "Usuário adicionado com o ID: $id")
             }
             .addOnFailureListener { e ->
@@ -130,7 +130,7 @@ class SignUpActivity : AppCompatActivity() {
 
         var i: Intent? = Intent("br.ufrn.imd.android.broadcast.TOAST")
         i!!.putExtra("nome",nome)
-        i!!.putExtra("email",email)
+        i.putExtra("email",email)
         sendBroadcast(i)
 
 
