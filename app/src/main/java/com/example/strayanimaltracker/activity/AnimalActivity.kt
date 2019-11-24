@@ -117,6 +117,14 @@ class AnimalActivity : AppCompatActivity() {
         //TODO FAÇA AQUI DENTRO TODOS OS SET DE IMAGEM E TEXTO DO LAYOUT
         Log.i(LOGTAG, "--------${postagem.id}, ${postagem.idUsuario}, ${postagem.nome},${postagem.data}, ${postagem.sexo}, ${postagem.especie}, ${postagem.latitude}, ${postagem.longitude}")
         imagem_animal.setImageBitmap(imagem)
+        id_postagem.text = "Id Postagem: ${postagem.id}"
+        id_usuario.text="Id Usuario: ${postagem.idUsuario}"
+        nome.text="Nome: ${postagem.nome}"
+        sexo.text="Sexo: ${postagem.sexo}"
+        especie.text="Especie: ${postagem.especie}"
+        latitude.text="Latitude: ${postagem.latitude}"
+        longitude.text= "Longitude: ${postagem.longitude}"
+        data.text="Data: ${postagem.data}"
     }
 
 
