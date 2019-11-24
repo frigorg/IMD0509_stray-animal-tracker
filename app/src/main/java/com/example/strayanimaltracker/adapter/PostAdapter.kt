@@ -13,10 +13,7 @@ import com.example.strayanimaltracker.entity.Post
 import kotlinx.android.synthetic.main.item_tarefa.view.*
 
 class PostAdapter (
-
-    public var posts: List<Post>,
-    private val callback: (Post, Int) -> Unit,
-    private val callbackLong:(Post, Int)-> Boolean):RecyclerView.Adapter<PostAdapter.VH>(){
+    public var posts: List<Post>):RecyclerView.Adapter<PostAdapter.VH>(){
 
 
 
@@ -29,15 +26,7 @@ class PostAdapter (
 
         val vh = VH(v)
 
-        vh.itemView.setOnClickListener {
-            val message = posts[vh.adapterPosition]
-            callback(message,vh.adapterPosition)
-        }
 
-        vh.itemView.setOnLongClickListener {
-
-            callbackLong(posts[vh.adapterPosition],vh.adapterPosition)
-        }
         return vh
     }
 
@@ -56,7 +45,7 @@ class PostAdapter (
         val id:TextView=itemView.txtId
         val txtTitle: TextView = itemView.txtTitulo
         val txtDescricao:TextView =itemView.txtDescricao
-        var check:CheckBox=itemView.Checked
+
 
     }
 

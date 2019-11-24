@@ -3,12 +3,16 @@ package com.example.strayanimaltracker.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.strayanimaltracker.R
+import com.example.strayanimaltracker.adapter.PostAdapter
 import com.example.strayanimaltracker.entity.Post
 import com.example.strayanimaltracker.entity.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_list.*
+import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : AppCompatActivity() {
 
@@ -17,7 +21,7 @@ class UserActivity : AppCompatActivity() {
     private var auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private lateinit var usuarioAtual: User
-
+    var adapter: PostAdapter? = null
     private var listaPost = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +31,7 @@ class UserActivity : AppCompatActivity() {
         coletarDados()
 
     }
+
 
     private fun coletarDados(){
         pegarUsuario{
@@ -87,13 +92,29 @@ class UserActivity : AppCompatActivity() {
 
         return postagem
     }
+    fun initRecyclerView() {
 
+        rvTarefas.adapter = adapter
+
+        val layoutMAnager = LinearLayoutManager(this)
+
+        rvTarefas.layoutManager = layoutMAnager
+
+    }
+    private fun list() {
+
+        adapter = PostAdapter(posts = this.listaPost  )
+        rvTarefas.adapter = adapter
+
+    }
     // Executa quando listaPost estiver completa
     private fun quandoDadosForemColetados(){
         //TODO FAÇA AQUI DENTRO TUDO QUE VC PRECISAR DEPOIS QUE OS POSTS FOREM PEGOS
         listaPost.forEach{
             Log.i(LOGTAG, "${it.nome},${it.idUsuario}, ${it.data}, ${it.especie}, ${it.sexo}, ${it.longitude}, ${it.latitude}")
         }
+        list()
+        initRecyclerView()
     }
 
 
