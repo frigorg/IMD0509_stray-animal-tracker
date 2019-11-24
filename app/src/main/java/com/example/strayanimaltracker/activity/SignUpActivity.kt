@@ -9,9 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
-import com.example.strayanimaltracker.NotificationUtils
 import com.example.strayanimaltracker.R
-import com.example.strayanimaltracker.TarefaReceiver
+import com.example.strayanimaltracker.PostReceiver
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -21,7 +20,7 @@ class SignUpActivity : AppCompatActivity() {
     private val MYTAG = "MYTAG"
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
-    private var receiver: TarefaReceiver? = null
+    private var receiver: PostReceiver? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -121,7 +120,7 @@ class SignUpActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w(MYTAG, "Erro ao adicionar o usuário", e)
             }
-        receiver = TarefaReceiver(nome,email)
+        receiver = PostReceiver(nome,email)
         var intentFilter = IntentFilter()
         intentFilter.addAction("br.ufrn.imd.android.broadcast.TOAST");
         registerReceiver(receiver,intentFilter)
