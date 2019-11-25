@@ -18,11 +18,10 @@ class AnimalActivity : AppCompatActivity() {
 
     private val LOGTAG = "LOGTAG"
 
-    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private var storage = FirebaseStorage.getInstance()
 
-    private lateinit var usuarioAtual: User
+    private lateinit var usuario: User
     private var postagem = Post()
     private lateinit var imagem: Bitmap
 
@@ -36,36 +35,16 @@ class AnimalActivity : AppCompatActivity() {
 
     }
 
-    private fun coletarDados(){
-        pegarUsuario{
-            pegarPosts{
-                pegarImagem{
+    private fun coletarDados() {
+        pegarPosts {
+            pegarUsuario {
+                pegarImagem {
                     quandoDadosForemColetados()
                 }
             }
         }
     }
 
-    // Método pega o usuário atual
-    private fun pegarUsuario(callback: () -> Unit = {}) {
-        usuarioAtual = User(auth.currentUser!!.uid)
-        db.collection("user")
-            .document(usuarioAtual.id)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    usuarioAtual.nome =  document.get("nome") as String
-                    usuarioAtual.sobrenome = document.get("sobrenome") as String
-                    usuarioAtual.email = document.get("email") as String
-
-                    Log.i(LOGTAG, "--------${usuarioAtual.id}, ${usuarioAtual.nome},${usuarioAtual.sobrenome}, ${usuarioAtual.email}")
-
-                    callback.invoke()
-                } else {
-                    Log.e(LOGTAG, "No such document")
-                }
-            }
-    }
 
     // Método pega todos os posts do usuário atual
     private fun pegarPosts(callback: () -> Unit = {}) {
@@ -76,21 +55,40 @@ class AnimalActivity : AppCompatActivity() {
                 postagem = pegarPostdeDocument(document)
                 callback.invoke()
             }
-            .addOnFailureListener {e ->
+            .addOnFailureListener { e ->
                 Log.e(LOGTAG, "Error getting documents: ", e.cause)
             }
     }
 
-    private fun pegarImagem(callback: () -> Unit = {}){
+    // Método pega o usuário atual
+    private fun pegarUsuario(callback: () -> Unit = {}) {
+        usuario = User(postagem.idUsuario)
+        db.collection("user")
+            .document(usuario.id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    usuario.nome = document.get("nome") as String
+                    usuario.sobrenome = document.get("sobrenome") as String
+                    usuario.email = document.get("email") as String
+
+                    callback.invoke()
+                } else {
+                    Log.e(LOGTAG, "No such document")
+                }
+            }
+    }
+
+    private fun pegarImagem(callback: () -> Unit = {}) {
         val storageRef = storage.reference
-        val pathReference = storageRef.child("images/${usuarioAtual.id}/${postagem.id}.jpg")
+        val pathReference = storageRef.child("images/${postagem.idUsuario}/${postagem.id}.jpg")
 
         val ONE_MEGABYTE: Long = 1024 * 1024
-        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener {image ->
-            imagem = BitmapFactory.decodeByteArray(image, 0 , image.size)
+        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { image ->
+            imagem = BitmapFactory.decodeByteArray(image, 0, image.size)
 
             callback.invoke()
-        }.addOnFailureListener {e ->
+        }.addOnFailureListener { e ->
             Log.e(LOGTAG, "Error getting documents: ", e.cause)
         }
 
@@ -113,18 +111,17 @@ class AnimalActivity : AppCompatActivity() {
     }
 
     // Executa quando listaPost estiver completa
-    private fun quandoDadosForemColetados(){
-        //TODO FAÇA AQUI DENTRO TODOS OS SET DE IMAGEM E TEXTO DO LAYOUT
-        Log.i(LOGTAG, "--------${postagem.id}, ${postagem.idUsuario}, ${postagem.nome},${postagem.data}, ${postagem.sexo}, ${postagem.especie}, ${postagem.latitude}, ${postagem.longitude}")
+    private fun quandoDadosForemColetados() {
+        Log.i(
+            LOGTAG,
+            "${postagem.id}, ${postagem.idUsuario}, ${postagem.nome},${postagem.data}, ${postagem.sexo}, ${postagem.especie}, ${postagem.latitude}, ${postagem.longitude}"
+        )
         imagem_animal.setImageBitmap(imagem)
-        id_postagem.text = "Id Postagem: ${postagem.id}"
-        id_usuario.text="Id Usuario: ${postagem.idUsuario}"
-        nome.text="Nome: ${postagem.nome}"
-        sexo.text="Sexo: ${postagem.sexo}"
-        especie.text="Especie: ${postagem.especie}"
-        latitude.text="Latitude: ${postagem.latitude}"
-        longitude.text= "Longitude: ${postagem.longitude}"
-        data.text="Data: ${postagem.data}"
+        nome_usuario.text = "Usuario: ${usuario.nome} ${usuario.sobrenome}"
+        nome.text = "Nome: ${postagem.nome}"
+        sexo.text = "Sexo: ${postagem.sexo}"
+        especie.text = "Especie: ${postagem.especie}"
+        data.text = "Data: ${postagem.data}"
     }
 
 

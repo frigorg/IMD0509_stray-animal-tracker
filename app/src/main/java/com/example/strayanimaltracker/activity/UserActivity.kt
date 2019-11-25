@@ -1,5 +1,6 @@
 package com.example.strayanimaltracker.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,6 @@ import com.example.strayanimaltracker.entity.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : AppCompatActivity() {
@@ -21,8 +21,9 @@ class UserActivity : AppCompatActivity() {
     private var auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private lateinit var usuarioAtual: User
-    var adapter: PostAdapter? = null
+
     private var listaPost = ArrayList<Post>()
+    var adapter = PostAdapter(listaPost, this::onClickCallback, this::onLongClickCallback)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +34,9 @@ class UserActivity : AppCompatActivity() {
     }
 
 
-    private fun coletarDados(){
-        pegarUsuario{
-            pegarTodosPosts{
+    private fun coletarDados() {
+        pegarUsuario {
+            pegarTodosPosts {
                 quandoDadosForemColetados()
             }
         }
@@ -43,21 +44,21 @@ class UserActivity : AppCompatActivity() {
 
     // Método pega o usuário atual
     private fun pegarUsuario(callback: () -> Unit = {}) {
-    usuarioAtual = User(auth.currentUser!!.uid)
-    db.collection("user")
-        .document(usuarioAtual.id)
-        .get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                usuarioAtual.nome =  document.get("nome") as String
-                usuarioAtual.sobrenome = document.get("sobrenome") as String
-                usuarioAtual.email = document.get("email") as String
+        usuarioAtual = User(auth.currentUser!!.uid)
+        db.collection("user")
+            .document(usuarioAtual.id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    usuarioAtual.nome = document.get("nome") as String
+                    usuarioAtual.sobrenome = document.get("sobrenome") as String
+                    usuarioAtual.email = document.get("email") as String
 
-                callback.invoke()
-            } else {
-                Log.e(LOGTAG, "No such document")
+                    callback.invoke()
+                } else {
+                    Log.e(LOGTAG, "No such document")
+                }
             }
-        }
     }
 
     // Método pega todos os posts do usuário atual
@@ -71,7 +72,7 @@ class UserActivity : AppCompatActivity() {
                 }
                 callback.invoke()
             }
-            .addOnFailureListener {e ->
+            .addOnFailureListener { e ->
                 Log.e(LOGTAG, "Error getting documents: ", e.cause)
             }
     }
@@ -92,29 +93,30 @@ class UserActivity : AppCompatActivity() {
 
         return postagem
     }
+
+    // Executa quando listaPost estiver completa
+    private fun quandoDadosForemColetados() {
+        initRecyclerView()
+    }
+
     fun initRecyclerView() {
 
-        rvTarefas.adapter = adapter
+        adapter.posts = listaPost
+
+        rvPosts.adapter = adapter
 
         val layoutMAnager = LinearLayoutManager(this)
 
-        rvTarefas.layoutManager = layoutMAnager
+        rvPosts.layoutManager = layoutMAnager
 
     }
-    private fun list() {
 
-        adapter = PostAdapter(posts = this.listaPost  )
-        rvTarefas.adapter = adapter
+    private fun onClickCallback(position: Int) {
 
     }
-    // Executa quando listaPost estiver completa
-    private fun quandoDadosForemColetados(){
-        //TODO FAÇA AQUI DENTRO TUDO QUE VC PRECISAR DEPOIS QUE OS POSTS FOREM PEGOS
-        listaPost.forEach{
-            Log.i(LOGTAG, "${it.nome},${it.idUsuario}, ${it.data}, ${it.especie}, ${it.sexo}, ${it.longitude}, ${it.latitude}")
-        }
-        list()
-        initRecyclerView()
+
+    fun onLongClickCallback(position: Int) {
+
     }
 
 
