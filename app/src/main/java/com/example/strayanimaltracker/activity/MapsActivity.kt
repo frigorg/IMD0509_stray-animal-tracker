@@ -35,7 +35,10 @@ class MapsActivity : AppCompatActivity(),
     GoogleMap.OnMapClickListener {
 
     private val LOGTAG = "LOGTAG"
+    private val MARK_REQUEST_CODE = 10
     private val POST_REQUEST_CODE = 20
+
+    private val marcacaoMapa: MutableMap<String, Marker> = HashMap()
 
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -53,6 +56,7 @@ class MapsActivity : AppCompatActivity(),
         var toobar: Toolbar = findViewById(R.id.toolbar_maps)
 
         setSupportActionBar(toobar)
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -75,7 +79,8 @@ class MapsActivity : AppCompatActivity(),
             abrirPostActivity()
             return true
         } else if (id == R.id.action_minhas_postagens) {
-            startActivity(Intent(this, UserActivity::class.java))
+//            startActivity(Intent(this, UserActivity::class.java))
+            startActivityForResult(Intent(this, UserActivity::class.java), MARK_REQUEST_CODE)
             return true
         } else if (id == R.id.action_sair) {
             logout()
@@ -84,6 +89,7 @@ class MapsActivity : AppCompatActivity(),
             return super.onOptionsItemSelected(item)
         }
     }
+
 
     // Executa quando o mapa estiver pronto
     override fun onMapReady(googleMap: GoogleMap) {
@@ -194,7 +200,7 @@ class MapsActivity : AppCompatActivity(),
 
     // Faz uma marcação no mapa
     private fun marcarMapa(postagem: Post) {
-        mMap.addMarker(
+        marcacaoMapa[postagem.id] = mMap.addMarker(
             MarkerOptions()
                 .position(LatLng(postagem.latitude, postagem.longitude))
                 .title(postagem.nome)
@@ -202,10 +208,17 @@ class MapsActivity : AppCompatActivity(),
         ).apply {
             this.tag = postagem.id
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MARK_REQUEST_CODE){
+            Log.i(LOGTAG, "ENTROU NO MARK_REQUEST_CODE")
+            mMap.clear()
+            carregarMarcacoes()
+        }
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {

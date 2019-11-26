@@ -40,8 +40,6 @@ class PostActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private val db = FirebaseFirestore.getInstance()
     private var storage = FirebaseStorage.getInstance()
 
-    // TODO QUANDO É APERTADO O BOTÃO DO CEL DE VOLTAR ENQUANTO A CÂMERA ESTÁ ABERTA, A ACTIVITY DEVE SER FINALIZADA
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)

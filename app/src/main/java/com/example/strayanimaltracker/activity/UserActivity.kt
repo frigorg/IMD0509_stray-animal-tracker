@@ -5,10 +5,12 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.strayanimaltracker.R
 import com.example.strayanimaltracker.UserFragment
 import com.example.strayanimaltracker.adapter.PostAdapter
+import com.example.strayanimaltracker.dialog.ExclusaoDialog
 import com.example.strayanimaltracker.entity.Post
 import com.example.strayanimaltracker.entity.User
 import com.google.firebase.auth.FirebaseAuth
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_user.*
+import java.lang.StringBuilder
 
 class UserActivity : AppCompatActivity() {
 
@@ -25,6 +28,8 @@ class UserActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private var storage = FirebaseStorage.getInstance()
     private lateinit var usuarioAtual: User
+
+    private val postsDeletados = ArrayList<String>()
 
     private var userFragment: UserFragment? = null
 
@@ -39,6 +44,11 @@ class UserActivity : AppCompatActivity() {
 
         coletarDados()
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     private fun coletarDados() {
@@ -119,7 +129,7 @@ class UserActivity : AppCompatActivity() {
     }
 
     private fun onClickCallback(position: Int) {
-        downloadImagem(listaPost[position].id) {imagem ->
+        downloadImagem(listaPost[position].id) { imagem ->
             userFragment?.setImagem(imagem)
         }
     }
@@ -141,8 +151,42 @@ class UserActivity : AppCompatActivity() {
     }
 
     fun onLongClickCallback(position: Int) {
-
+        ExclusaoDialog.show(supportFragmentManager,
+            object : ExclusaoDialog.OnExclusaoSetListener {
+                override fun excluirPost() {
+                    postsDeletados.add(listaPost[position].id)
+                    removerPost(listaPost[position].id)
+                    listaPost.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                }
+            })
     }
 
+    fun removerPost(idPost: String) {
+        deletarPost(idPost)
+        deletarImagem(idPost)
+        Toast.makeText(this, "Post deletado!", Toast.LENGTH_SHORT).show()
+    }
 
+    fun deletarPost(idPost: String) {
+        db.collection("post").document(idPost)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(LOGTAG, "DocumentSnapshot successfully deleted!")
+            }
+            .addOnFailureListener { e ->
+                Log.w(LOGTAG, "Error deleting document", e)
+            }
+    }
+
+    fun deletarImagem(idPost: String) {
+        val storageRef = storage.reference
+        var desertRef = storageRef.child("images/${usuarioAtual.id}/${idPost}.jpg")
+
+        desertRef.delete().addOnSuccessListener {
+            Log.d(LOGTAG, "Image successfully deleted!")
+        }.addOnFailureListener { e ->
+            Log.w(LOGTAG, "Error deleting image", e)
+        }
+    }
 }

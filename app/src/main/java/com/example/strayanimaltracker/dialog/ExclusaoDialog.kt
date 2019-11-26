@@ -7,45 +7,38 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.strayanimaltracker.R
 
-class TrashDialog: DialogFragment() {
+class ExclusaoDialog : DialogFragment() {
 
-    private var listener: OnTarefaTrashSetListener? = null
+    private var listener: OnExclusaoSetListener? = null
+
+    interface OnExclusaoSetListener {
+        fun excluirPost()
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
         val builder = AlertDialog.Builder(requireActivity())
+
         builder.setTitle("Deseja apagar ?")
         builder.setPositiveButton("Sim") { dialog, which ->
             if (listener != null) {
-                listener!!.onTarefaTrashSet(true)
+                listener!!.excluirPost()
             }
 
         }
         builder.setNegativeButton("Não") { dialog, which ->
-            if (listener != null) {
-                listener!!.onTarefaTrashSet(false)
-            }
 
         }
 
-        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_trash, null)
-
         builder.setView(view)
-
         return builder.create()
     }
 
-    interface OnTarefaTrashSetListener  {
-
-        fun onTarefaTrashSet(boo: Boolean)
-
-    }
-
     companion object {
-        fun show(fm: FragmentManager, listener: OnTarefaTrashSetListener) {
-            val dialog = TrashDialog()
+        fun show(fm: FragmentManager, listener: OnExclusaoSetListener) {
+
+            val dialog = ExclusaoDialog()
             dialog.listener = listener
-            dialog.show(fm, "noteNameDialog")
+            dialog.show(fm, "ExclusaoDialog")
         }
     }
 }
