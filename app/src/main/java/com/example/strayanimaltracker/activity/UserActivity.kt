@@ -1,17 +1,20 @@
 package com.example.strayanimaltracker.activity
 
-import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.strayanimaltracker.R
+import com.example.strayanimaltracker.UserFragment
 import com.example.strayanimaltracker.adapter.PostAdapter
 import com.example.strayanimaltracker.entity.Post
 import com.example.strayanimaltracker.entity.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : AppCompatActivity() {
@@ -20,7 +23,10 @@ class UserActivity : AppCompatActivity() {
 
     private var auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
+    private var storage = FirebaseStorage.getInstance()
     private lateinit var usuarioAtual: User
+
+    private var userFragment: UserFragment? = null
 
     private var listaPost = ArrayList<Post>()
     var adapter = PostAdapter(listaPost, this::onClickCallback, this::onLongClickCallback)
@@ -29,10 +35,11 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
 
+        userFragment = supportFragmentManager.findFragmentById(R.id.frag_user) as UserFragment
+
         coletarDados()
 
     }
-
 
     private fun coletarDados() {
         pegarUsuario {
@@ -112,7 +119,25 @@ class UserActivity : AppCompatActivity() {
     }
 
     private fun onClickCallback(position: Int) {
+        downloadImagem(listaPost[position].id) {imagem ->
+            userFragment?.setImagem(imagem)
+        }
+    }
 
+    private fun downloadImagem(id: String, callback: (imagem2: Bitmap) -> Unit = {}) {
+        lateinit var imagem: Bitmap
+
+        val storageRef = storage.reference
+        val pathReference = storageRef.child("images/${usuarioAtual.id}/${id}.jpg")
+
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { image ->
+            imagem = BitmapFactory.decodeByteArray(image, 0, image.size)
+
+            callback.invoke(imagem)
+        }.addOnFailureListener { e ->
+            Log.e(LOGTAG, "Error getting documents: ", e.cause)
+        }
     }
 
     fun onLongClickCallback(position: Int) {
