@@ -229,6 +229,7 @@ class MapsActivity : AppCompatActivity(),
                 }
             }
         }
+
     }
 
     // Faz o download de um post pelo seu ID e retorna um objeto Post referente ao ID

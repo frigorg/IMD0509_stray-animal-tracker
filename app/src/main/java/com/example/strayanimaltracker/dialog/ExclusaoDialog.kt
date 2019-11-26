@@ -19,7 +19,7 @@ class ExclusaoDialog : DialogFragment() {
         val builder = AlertDialog.Builder(requireActivity())
 
         builder.setTitle("Deseja apagar ?")
-        builder.setPositiveButton("Sim") { dialog, which ->
+        builder.setPositiveButton("Sim")     { dialog, which ->
             if (listener != null) {
                 listener!!.excluirPost()
             }
@@ -28,7 +28,7 @@ class ExclusaoDialog : DialogFragment() {
         builder.setNegativeButton("Não") { dialog, which ->
 
         }
-
+        val view = requireActivity().layoutInflater.inflate(R.layout.dialog_trash, null)
         builder.setView(view)
         return builder.create()
     }
