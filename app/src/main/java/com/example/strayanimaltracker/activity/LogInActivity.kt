@@ -1,5 +1,6 @@
 package com.example.strayanimaltracker.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -28,8 +29,14 @@ class LogInActivity : AppCompatActivity() {
         }
 
         cadastrar_login.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
+            startActivityForResult(Intent(this, SignUpActivity::class.java), 10)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if ((resultCode == Activity.RESULT_OK)&&(requestCode==10))
+            recuperarLoginPreference()
     }
 
     public override fun onStart() {
@@ -42,8 +49,6 @@ class LogInActivity : AppCompatActivity() {
     }
 
     fun verificarLogin() {
-
-        //TODO Seria legal colocar algo indicando carregamento até que esse método dê erro ou o login conclua
 
         if(email_login.text!!.isEmpty()){
             email_login.error = "Campo não preenchido"

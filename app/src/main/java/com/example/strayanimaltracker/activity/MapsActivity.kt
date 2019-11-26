@@ -215,7 +215,6 @@ class MapsActivity : AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == MARK_REQUEST_CODE){
-            Log.i(LOGTAG, "ENTROU NO MARK_REQUEST_CODE")
             mMap.clear()
             carregarMarcacoes()
         }

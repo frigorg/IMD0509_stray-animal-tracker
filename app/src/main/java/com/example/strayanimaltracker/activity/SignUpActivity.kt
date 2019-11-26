@@ -33,13 +33,11 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         cadastrar_signup.setOnClickListener {
-            if(validarCampos()) {
+            if (validarCampos()) {
                 cadastrarUser()
-
-
             }
 
-            }
+        }
 
     }
 
@@ -53,13 +51,10 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
 
-
                     Toast.makeText(
                         this@SignUpActivity,
                         "Usuário Cadastrado com Sucesso", Toast.LENGTH_LONG
                     ).show()
-
-
 
                     adicionarUser(auth.currentUser!!.uid, nome, sobrenome, email)
 
@@ -79,23 +74,23 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun validarCampos(): Boolean {
 
-        if(nome_signup.text!!.isEmpty()){
+        if (nome_signup.text!!.isEmpty()) {
             nome_signup.error = "Campo nome obrigatório"
             nome_signup.requestFocus()
             return false
-        }else if (sobrenome_signup.text!!.isEmpty()) {
+        } else if (sobrenome_signup.text!!.isEmpty()) {
             sobrenome_signup.error = "Campo sobrenome obrigatório"
             sobrenome_signup.requestFocus()
             return false
-        }else if(email_signup.text!!.isEmpty()){
+        } else if (email_signup.text!!.isEmpty()) {
             email_signup.error = "Campo E-mail obrigatório"
             email_signup.requestFocus()
             return false
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(email_signup.text.toString()).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email_signup.text.toString()).matches()) {
             email_signup.error = "E-mail inválido"
             email_signup.requestFocus()
             return false
-        }else if (senha_signup.text!!.isEmpty()) {
+        } else if (senha_signup.text!!.isEmpty()) {
             senha_signup.error = "Campo Senha obrigatório"
             senha_signup.requestFocus()
             return false
@@ -120,23 +115,21 @@ class SignUpActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w(MYTAG, "Erro ao adicionar o usuário", e)
             }
-        receiver = PostReceiver(nome,email)
+        receiver = PostReceiver(nome, email)
         var intentFilter = IntentFilter()
         intentFilter.addAction("br.ufrn.imd.android.broadcast.TOAST");
-        registerReceiver(receiver,intentFilter)
-
+        registerReceiver(receiver, intentFilter)
 
 
         var i: Intent? = Intent("br.ufrn.imd.android.broadcast.TOAST")
-        i!!.putExtra("nome",nome)
-        i.putExtra("email",email)
+        i!!.putExtra("nome", nome)
+        i.putExtra("email", email)
         sendBroadcast(i)
 
 
     }
 
-
-    fun salvarLoginPreference(email: String, senha: String){
+    fun salvarLoginPreference(email: String, senha: String) {
         val sp = getSharedPreferences("com.example.strayanimaltracker", Context.MODE_PRIVATE)
         val editor = sp.edit()
         editor.putString("EMAIL_PREFERENCE", email)
